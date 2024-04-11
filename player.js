@@ -1,15 +1,29 @@
 // Configuration du système de clés
-    let config = [{
-	    initDataTypes: ['cenc'],
-	    sessionTypes: ['persistent-license'],
-	    videoCapabilities: [{
-	      contentType: 'video/mp4; codecs="avc1.640029"'
-	    }],
-	    audioCapabilities: [{
-	      contentType: 'audio/mp4; codecs="mp4a.40.2"'
-	    }]
-	  }
-	];
+let config = [{
+    initDataTypes: ['cenc'],
+    sessionTypes: ['persistent-license'],
+    videoCapabilities: [{
+      contentType: 'video/mp4; codecs="avc1.640029"'
+    }],
+    audioCapabilities: [{
+      contentType: 'audio/mp4; codecs="mp4a.40.2"'
+    }]
+  }
+];
+	
+function createMediaKeys(keySystemAccess) {
+  let promise = keySystemAccess.createMediaKeys();
+  promise.catch(
+    function(error) {
+      console.error("Unable to create MediaKeys : " + error);
+    }
+  );
+  promise.then(
+    function(mediaKeys) {
+      onCreate(mediaKeys);
+    }
+  )
+}
 	
 window.onload = function() {
   let promise = navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
