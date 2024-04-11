@@ -1,46 +1,47 @@
-document.addEventListener("DOMContentLoaded", function() {
-    var videoElement = document.getElementById('videoPlayer');
-    if (typeof videoElement.mediaKeys === 'undefined' ||
-        typeof window.MediaKeys === 'undefined' ||
-        typeof window.MediaKeySession === 'undefined') {
-        console.error('EME API not supported');
-        return;
-    }
-
-    // URL de la vidéo chiffrée
-    var videoUrl = 'output.mp4';
-    
-    // Créer une session de licence
-    var keySession = null;
-    // Configuration du système de clés
-    var keySystemConfig = {
-        'com.widevine.alpha': {
-            videoCapabilities: [{
-                contentType: 'video/mp4; codecs="avc1.42E01E"'
-            }]
+// Configuration du système de clés
+    let config = [{
+	    initDataTypes: ['cenc'],
+	    sessionTypes: ['persistent-license'],
+	    videoCapabilities: [{
+	      contentType: 'video/mp4; codecs="avc1.640029"'
+	    }],
+	    audioCapabilities: [{
+	      contentType: 'audio/mp4; codecs="mp4a.40.2"'
+	    }]
+	  }
+	];
+	
+window.onload = function() {
+  let promise = navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
+    function(error) {
+      console.error("Error while initializing media key system: " + error);
+      config[0]['sessionTypes'] = ['temporary']
+      navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).then(
+        function(keySystemAccess) {
+          createMediaKeys(keySystemAccess);
         }
-    };
-
-    // Demande d'accès au système de clés média
-    navigator.requestMediaKeySystemAccess('com.widevine.alpha', [keySystemConfig['com.widevine.alpha']]).then(function(mediaKeySystemAccess) {
-        return mediaKeySystemAccess.createMediaKeys();
-    }).then(function(mediaKeys) {
-        return videoElement.setMediaKeys(mediaKeys);
-    }).then(function() {
-        // Charger la vidéo chiffrée
-        return fetch(videoUrl);
-    }).then(function(response) {
-        return response.arrayBuffer();
-    }).then(function(videoData) {
-        // Créer une session de licence
-        return videoElement.mediaKeys.createSession();
-    }).then(function(session) {
-        keySession = session;
-        keySession.generateRequest('com.widevine.alpha', new Uint8Array([0])).then(function() {
-            console.log('License request generated');
-        });
-    }).catch(function(error) {
-        console.error('Failed to set up MediaKeys', error);
+      )
+    }
+  );
+  promise.then(
+    function(keySystemAccess) {
+      createMediaKeys(keySystemAccess);    
     });
-});
+};
 
+async function onCreate(mediaKeys) {
+  let keySession = mediaKeys.createSession(config[0]['sessionTypes'])
+  if (keySession == null) {
+    console.error("Unable to create MediaSession")
+  } else {
+    console.log("MediaSession created with type: " + config[0]['sessionTypes'])
+  }
+  try {
+    keySession.addEventListener("message", handleMessage, false);
+  } catch (err) {
+    console.error("Unable to add 'message' " +
+      "event listener to the keySession object. Error: " + err.message);
+  }
+  // Generate license request
+  keySession.generateRequest("cenc", initData)
+}
