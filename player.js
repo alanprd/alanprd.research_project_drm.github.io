@@ -24,8 +24,8 @@ function createMediaKeys(keySystemAccess) {
     }
   )
 }
-	
-window.onload = function() {
+
+function initEME() {
   let promise = navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
     function(error) {
       console.error("Error while initializing media key system: " + error);
@@ -59,3 +59,15 @@ async function onCreate(mediaKeys) {
   // Generate license request
   keySession.generateRequest("cenc", initData)
 }
+
+window.onload = function() {
+  let videoPlayer = document.getElementById('videoPlayer');
+  videoPlayer.addEventListener('click', function() {
+    if (videoPlayer.paused) {
+      videoPlayer.play();
+      initEME();
+    } else {
+      videoPlayer.pause();
+    }
+  });
+};
