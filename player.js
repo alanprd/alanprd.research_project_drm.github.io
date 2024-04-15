@@ -105,9 +105,10 @@ window.onload = function() {
     // Playing or pausing the video depending on the current state
     if (videoPlayer.paused) {
       videoPlayer.play();
+      if (!videoPlayer.mediaKeys) {
       // Initializing the EME system on click
       initEME();
-
+      }
       player.load(mpdUrl).then(() => {
         console.log('La MPD a été chargée avec succès.');
       }).catch((error) => {
