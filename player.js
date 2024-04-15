@@ -98,13 +98,15 @@ window.onload = function() {
   });
 
   let mpdUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd';
+  let videoInitialized = false;
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
 
     // Playing or pausing the video depending on the current state
     if (videoPlayer.paused) {
-      videoPlayer.play();
+    
+      if(!videoInitialized){
       if (!videoPlayer.mediaKeys) {
       // Initializing the EME system on click
       initEME();
@@ -114,6 +116,9 @@ window.onload = function() {
       }).catch((error) => {
         console.error('Erreur lors du chargement de la MPD :', error);
       });
+      videoInitialized=true;
+    }
+    videoPlayer.play();
     } else {
       videoPlayer.pause();
     }
