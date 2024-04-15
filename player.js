@@ -95,31 +95,30 @@ window.onload = function() {
       // Forces play at lowest resolution.
       switchInterval: 1
     }
+
+    
   });
 
   let mpdUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd';
-  let videoInitialized = false;
+
+  if (!videoPlayer.mediaKeys) {
+    // Initializing the EME system on click
+    initEME();
+    }
+    player.load(mpdUrl).then(() => {
+      console.log('La MPD a été chargée avec succès.');
+    }).catch((error) => {
+      console.error('Erreur lors du chargement de la MPD :', error);
+    });
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
-
     // Playing or pausing the video depending on the current state
     if (videoPlayer.paused) {
       
       videoPlayer.play();
 
-      if(!videoInitialized){
-      if (!videoPlayer.mediaKeys) {
-      // Initializing the EME system on click
-      initEME();
-      }
-      player.load(mpdUrl).then(() => {
-        console.log('La MPD a été chargée avec succès.');
-      }).catch((error) => {
-        console.error('Erreur lors du chargement de la MPD :', error);
-      });
-      videoInitialized=true;
-    }
+    
     } else {
       videoPlayer.pause();
     }
