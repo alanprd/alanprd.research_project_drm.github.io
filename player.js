@@ -1,4 +1,7 @@
 // Configuration du système de clés
+
+let initData = fromHexString('000000447073736800000000edef8ba979d64acea3c827dcd51d21ed0000002408011201311a0d7769646576696e655f74657374220a323031355f74656172732a025344')
+
 let config = [{
     initDataTypes: ['cenc'],
     sessionTypes: ['persistent-license'],
@@ -71,3 +74,14 @@ window.onload = function() {
     }
   });
 };
+
+function handleMessage(event) {
+  var keySession = event.target;
+  var te = new TextEncoder();
+  var license = te.encode('{"keys":[{"kty":"oct","k":"tQ0bJVWb6b0KPL6KtZIy_A","kid":"LwVHf8JLtPrv2GUXFW2v_A"}],"type":"temporary"}');
+  keySession.update(license).catch(
+    console.error.bind(console, 'update() failed')
+  );
+}
+
+
