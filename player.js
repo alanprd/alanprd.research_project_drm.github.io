@@ -97,7 +97,7 @@ window.onload = function() {
     }
   });
 
-  let mpdUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/llama/llama.mpd';
+  let mpdUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd';
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
