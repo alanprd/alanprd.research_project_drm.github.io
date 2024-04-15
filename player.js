@@ -105,7 +105,9 @@ window.onload = function() {
 
     // Playing or pausing the video depending on the current state
     if (videoPlayer.paused) {
-    
+      
+      videoPlayer.play();
+
       if(!videoInitialized){
       if (!videoPlayer.mediaKeys) {
       // Initializing the EME system on click
@@ -118,7 +120,6 @@ window.onload = function() {
       });
       videoInitialized=true;
     }
-    videoPlayer.play();
     } else {
       videoPlayer.pause();
     }
