@@ -85,9 +85,9 @@ window.onload = function() {
   let videoPlayer = document.getElementById('videoPlayer');
 
   /** @type {?shaka.Player} */
-  let player = new shaka.Player(videoPlayer);
+  /*let player = new shaka.Player(videoPlayer);
 
-  /*player.configure({
+  player.configure({
     drm: {
       servers: {
           'com.widevine.alpha': licenseServerUrl
@@ -107,7 +107,7 @@ window.onload = function() {
   
     // Initializing the EME system on click
     //initEME();
-    player.load(mpdUrl).then(() => {
+    videoPlayer.load(mpdUrl).then(() => {
       console.log('La MPD a été chargée avec succès.');
     }).catch((error) => {
       console.error('Erreur lors du chargement de la MPD :', error);
