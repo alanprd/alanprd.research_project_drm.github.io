@@ -106,7 +106,7 @@ window.onload = function() {
   let mpdUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/tears.mpd';
   
     // Initializing the EME system on click
-    //initEME();
+    initEME();
     videoPlayer.load(mpdUrl).then(() => {
       console.log('La MPD a été chargée avec succès.');
     }).catch((error) => {
