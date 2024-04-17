@@ -75,6 +75,12 @@ function initEME() {
 
 // Function called when media keys are successfully created
 async function onCreate(mediaKeys, initData) {
+
+   // Set the media keys on the video player
+   videoPlayer.setMediaKeys(mediaKeys).catch(error => {
+    console.error('Failed to set media keys:', error);
+  });
+
   // Creating a media key session
   let keySession = mediaKeys.createSession(config[0]['sessionTypes'])
   if (keySession == null) {
@@ -93,10 +99,7 @@ async function onCreate(mediaKeys, initData) {
     console.error('Failed to generate license request:', error);
   });
 
-  // Set the media keys on the video player
-  videoPlayer.setMediaKeys(mediaKeys).catch(error => {
-    console.error('Failed to set media keys:', error);
-  });
+ 
 }
 
 
@@ -149,7 +152,7 @@ window.onload = function() {
   // Retrieving the video element
   let videoPlayer = document.getElementById('videoPlayer');
 
-   player.load(mpdUrl).then(() => {
+   videoPlayer.load(mpdUrl).then(() => {
       console.log('La MPD a été chargée avec succès.');
     }).catch((error) => {
       console.error('Erreur lors du chargement de la MPD :', error);
