@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:DASH:schema:MPD:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:mpeg:DASH:schema:MPD:2011 DASH-MPD.xsd" xmlns:cenc="urn:mpeg:cenc:2013" minBufferTime="PT2S" type="static" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" mediaPresentationDuration="PT734.1666870117188S">
+  <Period>
+    <AdaptationSet id="0" contentType="video" maxWidth="1920" maxHeight="800" frameRate="12288/512" par="12:5">
+      <ContentProtection value="cenc" schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="30303030-3030-3030-3030-303030303031"/>
+      <ContentProtection schemeIdUri="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed">
+        <cenc:pssh>AAAARHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAACQIARIBMRoNd2lkZXZpbmVfdGVzdCIKMjAxNV90ZWFycyoCU0Q=</cenc:pssh>
+      </ContentProtection>
+      <Representation id="0" bandwidth="686560" codecs="avc1.42c01e" mimeType="video/mp4" sar="1:1" width="720" height="300" frameRate="12288/512">
+        <BaseURL>tears_h264_base_480p_750.mp4</BaseURL>
+        <SegmentBase indexRange="957-1732" timescale="12288">
+          <Initialization range="0-956"/>
+        </SegmentBase>
+      </Representation>
+      <Representation id="1" bandwidth="1149238" codecs="avc1.4d401f" mimeType="video/mp4" sar="399:400" width="1280" height="532" frameRate="12288/512">
+        <BaseURL>tears_h264_main_720p_1500.mp4</BaseURL>
+        <SegmentBase indexRange="999-1774" timescale="12288">
+          <Initialization range="0-998"/>
+        </SegmentBase>
+      </Representation>
+      <Representation id="2" bandwidth="3036423" codecs="avc1.640028" mimeType="video/mp4" sar="1:1" width="1920" height="800" frameRate="12288/512">
+        <BaseURL>tears_h264_high_1080p_3000.mp4</BaseURL>
+        <SegmentBase indexRange="961-1736" timescale="12288">
+          <Initialization range="0-960"/>
+        </SegmentBase>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="1" contentType="audio" lang="en">
+      <ContentProtection value="cenc" schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="30303030-3030-3030-3030-303030303030"/>
+      <ContentProtection schemeIdUri="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed">
+        <cenc:pssh>AAAAR3Bzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAACcIARIBMBoNd2lkZXZpbmVfdGVzdCIKMjAxNV90ZWFycyoFQVVESU8=</cenc:pssh>
+      </ContentProtection>
+      <Representation id="3" bandwidth="132237" codecs="mp4a.40.2" mimeType="audio/mp4" audioSamplingRate="44100">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+        <BaseURL>tears_audio_aac_eng.mp4</BaseURL>
+        <SegmentBase indexRange="834-1753" timescale="44100">
+          <Initialization range="0-833"/>
+        </SegmentBase>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>
