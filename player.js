@@ -165,7 +165,7 @@ function handleEncrypted(event) {
 window.onload = function() {
   
 
-
+var context = new Dash.di.DashContext();
 // Create a dash.js player object
 let videoPlayer = new MediaPlayer(context);
 videoPlayer.startup();
