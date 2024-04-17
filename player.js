@@ -96,7 +96,7 @@ async function onCreate(mediaKeys) {
   }
 
     // Add the encrypted event listener
-    keySession.addEventListener('encrypted', function(event) {
+    videoPlayer.addEventListener('encrypted', function(event) {
       handleEncrypted(event, keySession);
     }, false);
 
