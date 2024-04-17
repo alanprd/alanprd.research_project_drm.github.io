@@ -111,6 +111,7 @@ function handleEncrypted(event) {
 
   initDataType=event.initDataType;
   initData=event.initData;
+  // Initializing the EME system 
   initEME();
 
 }
@@ -174,7 +175,6 @@ videoPlayer.attachView(document.querySelector("#videoPlayer"));
 videoPlayer.attachSource(videoUrl);
 
 
-// Initializing the EME system on click
 // Add the encrypted event listener
 videoPlayer.addEventListener('encrypted', function(event) {
   handleEncrypted(event);
