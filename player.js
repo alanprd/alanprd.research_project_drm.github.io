@@ -173,8 +173,8 @@ let videoPlayer = dashjs.MediaPlayer().create();
 videoPlayer.initialize(document.querySelector("#videoPlayer"), url, true);
 
 
-    // Initializing the EME system on click
-    initEME();
+// Initializing the EME system on click
+initEME();
   
 
   // Adding an event listener for click on the video
