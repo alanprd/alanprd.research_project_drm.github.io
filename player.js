@@ -77,7 +77,7 @@ function initEME() {
 async function onCreate(mediaKeys) {
 
    // Set the media keys on the video player
-   video.setMediaKeys(mediaKeys).catch(error => {
+   videoPlayer.setMediaKeys(mediaKeys).catch(error => {
     console.error('Failed to set media keys:', error);
   });
 
