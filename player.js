@@ -155,7 +155,7 @@ window.onload = function() {
 let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/manifest.mpd';
 
 // The video element on your page
-let video = document.querySelector('#video');
+let video = document.querySelector('#videoplayer');
 
 // The MediaKeys object for the video
 let mediaKeys;
