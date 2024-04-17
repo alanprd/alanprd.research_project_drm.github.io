@@ -74,7 +74,7 @@ function initEME() {
 };
 
 // Function called when media keys are successfully created
-async function onCreate(mediaKeys, initData) {
+async function onCreate(mediaKeys) {
 
    // Set the media keys on the video player
    video.setMediaKeys(mediaKeys).catch(error => {
