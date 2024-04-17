@@ -149,6 +149,12 @@ window.onload = function() {
   // Retrieving the video element
   let videoPlayer = document.getElementById('videoPlayer');
 
+   player.load(mpdUrl).then(() => {
+      console.log('La MPD a été chargée avec succès.');
+    }).catch((error) => {
+      console.error('Erreur lors du chargement de la MPD :', error);
+    });
+
   // Fetch the MPD file
 fetch(mpdUrl).then(response => response.text()).then(mpdFile => {
   // Parse the MPD file
@@ -167,11 +173,7 @@ fetch(mpdUrl).then(response => response.text()).then(mpdFile => {
 
     // Initializing the EME system on click
     initEME();
-   /* player.load(mpdUrl).then(() => {
-      console.log('La MPD a été chargée avec succès.');
-    }).catch((error) => {
-      console.error('Erreur lors du chargement de la MPD :', error);
-    });*/
+  
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
