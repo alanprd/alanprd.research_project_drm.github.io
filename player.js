@@ -96,7 +96,7 @@ async function onCreate(mediaKeys) {
   }
 
     // Add the encrypted event listener
-    video.addEventListener('encrypted', function(event) {
+    keySession.addEventListener('encrypted', function(event) {
       handleEncrypted(event, keySession);
     }, false);
 
@@ -168,9 +168,11 @@ window.onload = function() {
 
 // The URL of the video you want to play
 let videoUrl = './video.mpd';
-let videoPlayer = dashjs.MediaPlayer().create();
-// The video element on your page
-videoPlayer.initialize(document.querySelector("#videoPlayer"), videoUrl, true);
+var context = new Dash.di.DashContext();
+var videoPlayer = new MediaPlayer(context);
+player.startup();
+player.attachView(document.querySelector("#videoPlayer"));
+player.attachSource(videoUrl);
 
 
 // Initializing the EME system on click
