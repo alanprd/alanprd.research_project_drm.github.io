@@ -38,20 +38,7 @@ let config = [{
   }]
 }];
 
-// Function to create media keys from key system access
-function createMediaKeys(keySystemAccess) {
-  let promise = keySystemAccess.createMediaKeys();
-  promise.catch(
-    function(error) {
-      console.error("Unable to create MediaKeys: " + error);
-    }
-  );
-  promise.then(
-    function(mediaKeys) {
-      onCreate(mediaKeys);
-    }
-  )
-}
+
 
 // Initialization of the EME (Encrypted Media Extensions) system
 function initEME() {
@@ -72,6 +59,21 @@ function initEME() {
       createMediaKeys(keySystemAccess);    
     });
 };
+
+// Function to create media keys from key system access
+async function createMediaKeys(keySystemAccess) {
+  let promise = await keySystemAccess.createMediaKeys();
+  promise.catch(
+    function(error) {
+      console.error("Unable to create MediaKeys: " + error);
+    }
+  );
+  promise.then(
+    function(mediaKeys) {
+      onCreate(mediaKeys);
+    }
+  )
+}
 
 // Function called when media keys are successfully created
 async function onCreate(mediaKeys) {
