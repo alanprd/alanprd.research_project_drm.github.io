@@ -178,15 +178,15 @@ initEME();
   
 
   // Adding an event listener for click on the video
-  video.addEventListener('click', function() {
+  videoPlayer.addEventListener('click', function() {
     // Playing or pausing the video depending on the current state
-    if (video.paused) {
+    if (videoPlayer.paused) {
       
-      video.play();
+      videoPlayer.play();
 
     
     } else {
-      video.pause();
+      videoPlayer.pause();
     }
   });
 };
