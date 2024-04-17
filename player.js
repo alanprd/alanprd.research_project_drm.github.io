@@ -89,8 +89,16 @@ async function onCreate(mediaKeys, initData) {
     console.error("Unable to add 'message' event listener to the keySession object. Error: " + err.message);
   }
   // Generating the license request
-  keySession.generateRequest("cenc", initData)
+  keySession.generateRequest("cenc", initData).catch(error => {
+    console.error('Failed to generate license request:', error);
+  });
+
+  // Set the media keys on the video player
+  videoPlayer.setMediaKeys(mediaKeys).catch(error => {
+    console.error('Failed to set media keys:', error);
+  });
 }
+
 
 // Event handler for the media key session message
 function handleMessage(event) {
@@ -129,7 +137,7 @@ function handleMessage(event) {
     console.log("Sending request to: " + url)
     xhr.open("POST", url, true);
     xhr.responseType = "arraybuffer";
-    xhr.setRequestHeader('Content-Type', 'application/data');
+    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
     xhr.send(event.message);
   }
 }
