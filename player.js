@@ -11,7 +11,8 @@ let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy'
 // inline policy for renewable licenses  with persistence allowed
 let inline_policy_renew = '?policy=CAEQARgBKAAwADgFSAFQBWAB'
 let initData;
-let keyId;
+let initDataType;
+
 
 // Function to convert from base64 to Uint8Array
 function base64ToUint8Array(base64) {
@@ -96,22 +97,23 @@ async function onCreate(mediaKeys) {
   } catch (err) {
     console.error("Unable to add 'message' event listener to the keySession object. Error: " + err.message);
   }
+  // Generating the license request
+  keySession.generateRequest(initDataType, initData).catch(error => {
+    console.error('Failed to generate license request:', error);
+  });
 
-    // Add the encrypted event listener
-    videoPlayer.addEventListener('encrypted', function(event) {
-      handleEncrypted(event, keySession);
-    }, false);
-
-
+    
 
  
 }
 
-function handleEncrypted(event, keySession) {
-  // Generating the license request
-  keySession.generateRequest(event.initDataType, event.initData).catch(error => {
-    console.error('Failed to generate license request:', error);
-  });}
+function handleEncrypted(event) {
+
+  initDataType=event.initDataType;
+  initData=event.initData;
+  initEME();
+
+}
 
 
 // Event handler for the media key session message
@@ -156,12 +158,7 @@ function handleMessage(event) {
   }
 }
 
-function handleEncrypted(event) {
-  onCreate()
-  var session = videoElement.mediaKeys.createSession();
 
-  session.generateRequest(event.initDataType, event.initData);
-}
 
 // Execution when the window is fully loaded
 window.onload = function() {
@@ -178,7 +175,11 @@ videoPlayer.attachSource(videoUrl);
 
 
 // Initializing the EME system on click
-initEME();
+// Add the encrypted event listener
+videoPlayer.addEventListener('encrypted', function(event) {
+  handleEncrypted(event);
+}, false);
+
   
 
   // Adding an event listener for click on the video
