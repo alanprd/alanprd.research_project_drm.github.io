@@ -77,7 +77,7 @@ function initEME() {
 async function onCreate(mediaKeys, initData) {
 
    // Set the media keys on the video player
-   videoPlayer.setMediaKeys(mediaKeys).catch(error => {
+   video.setMediaKeys(mediaKeys).catch(error => {
     console.error('Failed to set media keys:', error);
   });
 
@@ -149,14 +149,35 @@ function handleMessage(event) {
 // Execution when the window is fully loaded
 window.onload = function() {
   
-  // Retrieving the video element
-  let videoPlayer = document.getElementById('videoPlayer');
 
-   videoPlayer.load(mpdUrl).then(() => {
-      console.log('La MPD a été chargée avec succès.');
-    }).catch((error) => {
-      console.error('Erreur lors du chargement de la MPD :', error);
+
+// The URL of the video you want to play
+let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/manifest.mpd';
+
+// The video element on your page
+let video = document.querySelector('#video');
+
+// The MediaKeys object for the video
+let mediaKeys;
+
+// Set up MediaSource
+let mediaSource = new MediaSource();
+video.src = URL.createObjectURL(mediaSource);
+
+mediaSource.addEventListener('sourceopen', function() {
+  fetch(videoUrl).then(response => {
+    return response.arrayBuffer();
+  }).then(data => {
+    let sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.640028"');
+    sourceBuffer.addEventListener('updateend', function() {
+      if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+        mediaSource.endOfStream();
+      }
     });
+    sourceBuffer.appendBuffer(data);
+  });
+});
+
 
   // Fetch the MPD file
 fetch(mpdUrl).then(response => response.text()).then(mpdFile => {
@@ -179,15 +200,15 @@ fetch(mpdUrl).then(response => response.text()).then(mpdFile => {
   
 
   // Adding an event listener for click on the video
-  videoPlayer.addEventListener('click', function() {
+  video.addEventListener('click', function() {
     // Playing or pausing the video depending on the current state
-    if (videoPlayer.paused) {
+    if (video.paused) {
       
-      videoPlayer.play();
+      video.play();
 
     
     } else {
-      videoPlayer.pause();
+      video.pause();
     }
   });
 };
