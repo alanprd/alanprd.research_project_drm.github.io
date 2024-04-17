@@ -170,9 +170,9 @@ window.onload = function() {
 let videoUrl = './video.mpd';
 var context = new Dash.di.DashContext();
 var videoPlayer = new MediaPlayer(context);
-player.startup();
-player.attachView(document.querySelector("#videoPlayer"));
-player.attachSource(videoUrl);
+videoPlayer.startup();
+videoPlayer.attachView(document.querySelector("#videoPlayer"));
+videoPlayer.attachSource(videoUrl);
 
 
 // Initializing the EME system on click
