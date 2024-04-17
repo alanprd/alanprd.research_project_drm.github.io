@@ -167,7 +167,7 @@ window.onload = function() {
 
 
 // The URL of the video you want to play
-let videoUrl = './video.mpd';
+let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears.mpd';
 var context = new Dash.di.DashContext();
 var videoPlayer = new MediaPlayer(context);
 videoPlayer.startup();
