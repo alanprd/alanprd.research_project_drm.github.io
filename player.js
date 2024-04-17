@@ -170,7 +170,7 @@ window.onload = function() {
 let videoUrl = './video.mpd';
 let videoPlayer = dashjs.MediaPlayer().create();
 // The video element on your page
-videoPlayer.initialize(document.querySelector("#videoPlayer"), url, true);
+videoPlayer.initialize(document.querySelector("#videoPlayer"), videoUrl, true);
 
 
 // Initializing the EME system on click
