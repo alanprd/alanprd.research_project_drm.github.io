@@ -94,13 +94,22 @@ async function onCreate(mediaKeys) {
   } catch (err) {
     console.error("Unable to add 'message' event listener to the keySession object. Error: " + err.message);
   }
-  // Generating the license request
-  keySession.generateRequest("cenc", initData).catch(error => {
-    console.error('Failed to generate license request:', error);
-  });
+
+    // Add the encrypted event listener
+    video.addEventListener('encrypted', function(event) {
+      handleEncrypted(event, keySession);
+    }, false);
+
+
 
  
 }
+
+function handleEncrypted(event, keySession) {
+  // Generating the license request
+  keySession.generateRequest(event.initDataType, event.initData).catch(error => {
+    console.error('Failed to generate license request:', error);
+  });}
 
 
 // Event handler for the media key session message
@@ -145,6 +154,12 @@ function handleMessage(event) {
   }
 }
 
+function handleEncrypted(event) {
+  onCreate()
+  var session = videoElement.mediaKeys.createSession();
+
+  session.generateRequest(event.initDataType, event.initData);
+}
 
 // Execution when the window is fully loaded
 window.onload = function() {
@@ -153,45 +168,10 @@ window.onload = function() {
 
 // The URL of the video you want to play
 let videoUrl = './video.mpd';
-
+let videoPlayer = dashjs.MediaPlayer().create();
 // The video element on your page
-let video = document.querySelector('#videoPlayer');
-  
-// Set up MediaSource
-let mediaSource = new MediaSource();
-video.src = URL.createObjectURL(mediaSource);
+videoPlayer.initialize(document.querySelector("#videoPlayer"), url, true);
 
-mediaSource.addEventListener('sourceopen', function() {
-  fetch(videoUrl).then(response => {
-    return response.arrayBuffer();
-  }).then(data => {
-    let sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.640028"');
-    sourceBuffer.addEventListener('updateend', function() {
-      if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
-        mediaSource.endOfStream();
-      }
-    });
-    sourceBuffer.appendBuffer(data);
-  });
-});
-
-const mpdUrl = "./video.mpd";
-
-  // Fetch the MPD file
-fetch(mpdUrl).then(response => response.text()).then(mpdFile => {
-  // Parse the MPD file
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString(mpdFile,"text/xml");
-
-  // Extract the initData and keyId from the MPD file
-  initData = xmlDoc.getElementsByTagName("cenc:pssh")[0].textContent;
-  keyId = xmlDoc.getElementsByTagName("ContentProtection")[0].getAttribute("cenc:default_KID");
-
-  // Convert initData and keyId from base64 to Uint8Array
-  initData = base64ToUint8Array(initData);
-  keyId = base64ToUint8Array(keyId);
-
-});
 
     // Initializing the EME system on click
     initEME();
