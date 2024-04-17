@@ -152,7 +152,7 @@ window.onload = function() {
 
 
 // The URL of the video you want to play
-let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/manifest.mpd';
+let videoUrl = './video.mpd';
 
 // The video element on your page
 let video = document.querySelector('#videoPlayer');
