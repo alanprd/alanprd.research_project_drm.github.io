@@ -95,21 +95,21 @@ async function onCreate(mediaKeys) {
     console.error("Unable to add 'message' event listener to the keySession object. Error: " + err.message);
   }
 
-    /*// Add the encrypted event listener
+    // Add the encrypted event listener
     videoPlayer.addEventListener('encrypted', function(event) {
       handleEncrypted(event, keySession);
-    }, false);*/
+    }, false);
 
 
 
  
 }
 
-/*function handleEncrypted(event, keySession) {
+function handleEncrypted(event, keySession) {
   // Generating the license request
   keySession.generateRequest(event.initDataType, event.initData).catch(error => {
     console.error('Failed to generate license request:', error);
-  });}*/
+  });}
 
 
 // Event handler for the media key session message
@@ -165,32 +165,15 @@ function handleEncrypted(event) {
 window.onload = function() {
   
 
+
+// The URL of the video you want to play
+let videoUrl = './video.mpd';
 var context = new Dash.di.DashContext();
-// Create a dash.js player object
-let videoPlayer = new MediaPlayer(context);
+var videoPlayer = new MediaPlayer(context);
 videoPlayer.startup();
-
-// The video element on your page
 videoPlayer.attachView(document.querySelector("#videoPlayer"));
+videoPlayer.attachSource(videoUrl);
 
-// Load the MPD file (assuming you have the URL)
-videoPlayer.attachSource('./video.mpd');
-
-// Handle errors during MPD loading
-videoPlayer.on(Dash.MediaPlayer.Events.ERROR, function(error) {
-  console.error("Error loading MPD:", error);
-});
-
-// Function to handle encrypted segments (triggered by dash.js 'encrypted' event)
-function handleEncrypted(event) {
-  let keySession = videoPlayer.keySystemAccess.createSession();
-  keySession.generateRequest(event.initDataType, event.initData).catch(error => {
-    console.error('Failed to generate license request:', error);
-  });
-}
-
-// Event listener for encrypted segments
-videoPlayer.on(Dash.MediaPlayer.Events.ENCRYPTED, handleEncrypted);
 
 // Initializing the EME system on click
 initEME();
