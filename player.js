@@ -156,10 +156,7 @@ let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears/manifest.
 
 // The video element on your page
 let video = document.querySelector('#videoplayer');
-
-// The MediaKeys object for the video
-let mediaKeys;
-
+  
 // Set up MediaSource
 let mediaSource = new MediaSource();
 video.src = URL.createObjectURL(mediaSource);
