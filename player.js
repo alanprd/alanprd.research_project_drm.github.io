@@ -176,9 +176,7 @@ videoPlayer.attachSource(videoUrl);
 
 
 // Add the encrypted event listener
-videoPlayer.addEventListener('encrypted', function(event) {
-  handleEncrypted(event);
-}, false);
+videoPlayer.addEventListener('encrypted',handleEncrypted,false);
 
   
 
