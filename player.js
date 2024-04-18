@@ -172,13 +172,13 @@ var context = new Dash.di.DashContext();
 var videoPlayer = new MediaPlayer(context);
 videoPlayer.startup();
 videoPlayer.attachView(document.querySelector("#videoPlayer"));
-videoPlayer.attachSource(videoUrl);
 
 
 // Add the encrypted event listener
 videoPlayer.addEventListener('encrypted',handleEncrypted,false);
 
   
+videoPlayer.attachSource(videoUrl);
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
