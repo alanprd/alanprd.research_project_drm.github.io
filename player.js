@@ -185,7 +185,7 @@ let player = new shaka.Player(videoPlayer);
 player.configure({
   drm: {
     servers: {
-        'com.widevine.alpha': "https://license.uat.widevine.com/cenc/getcontentkey/widevine_test"
+        'com.widevine.alpha': licenseServerUrl
     }
   },
   abr: {
