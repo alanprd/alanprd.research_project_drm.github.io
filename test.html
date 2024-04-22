@@ -10,37 +10,39 @@
   <video id="videoTest" controls autoplay width="640" height="360"></video>
   <script>
     const videoElement = document.getElementById('videoTest');
-    let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy'
+    let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy';
+    let isLoaded = false;
 
     window.onload = function() {
-    
-    	/** @type {?shaka.Player} */
-	let player = new shaka.Player(videoElement);
+      const player = new shaka.Player(videoElement);
 
-	player.configure({
-	  drm: {
-	    servers: {
-		'com.widevine.alpha': licenseServerUrl
-	    }
-	  }
-	});
-	
-	videoElement.addEventListener('click', function() {
-	    // Playing or pausing the video depending on the current state
-	    if(videoElement.paused){
-	      
-	      player.load("./output.mpd").then(() => {
-		console.log('La MPD a été chargée avec succès.');
-	      }).catch((error) => {
-		console.error('Erreur lors du chargement de la MPD :', error);
-	      });
+      player.configure({
+        drm: {
+          servers: {
+            'com.widevine.alpha': licenseServerUrl
+          }
+        }
+      });
 
-	    
-	    }else{
-	      videoElement.pause();
-	    }
-	});
-    
+      // Charger la vidéo lorsqu'on clique sur la vidéo
+      videoElement.addEventListener('click', async function() {
+        if (!isLoaded) {
+          try {
+            await player.load("./output.mpd");
+            console.log('La MPD a été chargée avec succès.');
+            isLoaded = true;
+          } catch (error) {
+            console.error('Erreur lors du chargement de la MPD :', error);
+          }
+        } else {
+          // Lecture ou pause de la vidéo
+          if (videoElement.paused) {
+            videoElement.play();
+          } else {
+            videoElement.pause();
+          }
+        }
+      });
     };
   </script>
 </body>
