@@ -166,7 +166,7 @@ window.onload = function() {
   
 
 
-// The URL of the video you want to play
+/*// The URL of the video you want to play
 let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears.mpd';
 var context = new Dash.di.DashContext();
 var videoPlayer = new MediaPlayer(context);
@@ -175,7 +175,9 @@ videoPlayer.attachView(document.querySelector("#videoPlayer"));
 
 
 // Add the encrypted event listener
-videoPlayer.addEventListener('encrypted',handleEncrypted,false);
+videoPlayer.addEventListener('encrypted',handleEncrypted,false);*/
+
+let videoPlayer = document.getElementById('videoPlayer');
 
 /** @type {?shaka.Player} */
 let player = new shaka.Player(videoPlayer);
@@ -194,7 +196,7 @@ player.configure({
   }
 });
   
-videoPlayer.attachSource(videoUrl);
+//videoPlayer.attachSource(videoUrl);
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
