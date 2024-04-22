@@ -177,6 +177,22 @@ videoPlayer.attachView(document.querySelector("#videoPlayer"));
 // Add the encrypted event listener
 videoPlayer.addEventListener('encrypted',handleEncrypted,false);
 
+/** @type {?shaka.Player} */
+let player = new shaka.Player(videoPlayer);
+
+player.configure({
+  drm: {
+    servers: {
+        'com.widevine.alpha': licenseServerUrl
+    }
+  },
+  abr: {
+    enabled: false,
+    defaultBandwidthEstimate: 1,
+    // Forces play at lowest resolution.
+    switchInterval: 1
+  }
+});
   
 videoPlayer.attachSource(videoUrl);
 
@@ -185,7 +201,12 @@ videoPlayer.attachSource(videoUrl);
     // Playing or pausing the video depending on the current state
     if (videoPlayer.paused) {
       
-      videoPlayer.play();
+      //videoPlayer.play();
+      player.load("./output.mpd").then(() => {
+        console.log('La MPD a été chargée avec succès.');
+      }).catch((error) => {
+        console.error('Erreur lors du chargement de la MPD :', error);
+      });
 
     
     } else {
