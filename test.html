@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shaka Player Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.0/shaka-player.compiled.js"></script>
+</head>
+<body>
+  <video id="videoPLayer" controls autoplay width="640" height="360"></video>
+  <script>
+    const videoElement = document.getElementById('videoPlayer');
+    let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy'
+
+    window.onload = function() {
+    
+    	/** @type {?shaka.Player} */
+	let player = new shaka.Player(videoElement);
+
+	player.configure({
+	  drm: {
+	    servers: {
+		'com.widevine.alpha': licenseServerUrl
+	    }
+	  },
+	  abr: {
+	    enabled: false,
+	    defaultBandwidthEstimate: 1,
+	    // Forces play at lowest resolution.
+	    switchInterval: 1
+	  }
+	});
+	
+	videoElement.addEventListener('click', function() {
+	    // Playing or pausing the video depending on the current state
+	    if(videoElement.paused){
+	      
+	      player.load("./output.mpd").then(() => {
+		console.log('La MPD a été chargée avec succès.');
+	      }).catch((error) => {
+		console.error('Erreur lors du chargement de la MPD :', error);
+	      });
+
+	    
+	    }else{
+	      videoElement.pause();
+	    }
+	});
+    
+    };
+  </script>
+</body>
+</html>
+

@@ -166,7 +166,7 @@ window.onload = function() {
   
 
 
-/*// The URL of the video you want to play
+// The URL of the video you want to play
 let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears.mpd';
 var context = new Dash.di.DashContext();
 var videoPlayer = new MediaPlayer(context);
@@ -175,42 +175,17 @@ videoPlayer.attachView(document.querySelector("#videoPlayer"));
 
 
 // Add the encrypted event listener
-videoPlayer.addEventListener('encrypted',handleEncrypted,false);*/
+videoPlayer.addEventListener('encrypted',handleEncrypted,false);
 
-let videoPlayer = document.getElementById('videoPlayer');
-
-/** @type {?shaka.Player} */
-let player = new shaka.Player(videoPlayer);
-
-player.configure({
-  drm: {
-    servers: {
-        'com.widevine.alpha': licenseServerUrl
-    }
-  },
-  abr: {
-    enabled: false,
-    defaultBandwidthEstimate: 1,
-    // Forces play at lowest resolution.
-    switchInterval: 1
-  }
-});
+//let videoPlayer = document.getElementById('videoPlayer');
   
-//videoPlayer.attachSource(videoUrl);
+videoPlayer.attachSource(videoUrl);
 
   // Adding an event listener for click on the video
   videoPlayer.addEventListener('click', function() {
     // Playing or pausing the video depending on the current state
-    if (videoPlayer.paused) {
-      
-      //videoPlayer.play();
-      player.load("./output.mpd").then(() => {
-        console.log('La MPD a été chargée avec succès.');
-      }).catch((error) => {
-        console.error('Erreur lors du chargement de la MPD :', error);
-      });
-
-    
+    if (videoPlayer.paused) {   
+      videoPlayer.play(); 
     } else {
       videoPlayer.pause();
     }
