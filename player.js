@@ -10,8 +10,7 @@ let serverCert = fromHexString('080512C7050AC102080312101705B917CC1204868B06333A
 let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy'
 // inline policy for renewable licenses  with persistence allowed
 let inline_policy_renew = '?policy=CAEQARgBKAAwADgFSAFQBWAB'
-let initData;
-let initDataType;
+
 
 
 // Function to convert from base64 to Uint8Array
@@ -30,92 +29,26 @@ function base64ToUint8Array(base64) {
 // Configuration of the key system
 let config = [{
   initDataTypes: ['cenc'],
-  sessionTypes: ['persistent-license'],
+  //sessionTypes: ['persistent-license'],
   videoCapabilities: [{
-    contentType: 'video/mp4; codecs="avc1.640028"'
+    contentType: 'video/mp4; codecs="avc1.64001f"'
   }],
   audioCapabilities: [{
     contentType: 'audio/mp4; codecs="mp4a.40.2"'
-  }]
+  }],
 }];
 
+async function handleEmeEncryption(event){
 
-
-// Initialization of the EME (Encrypted Media Extensions) system
-function initEME() {
-  let promise = navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
-    function(error) {
-      console.error("Error while initializing media key system: " + error);
-      // If an error occurs, try with a temporary session
-      config[0]['sessionTypes'] = ['temporary']
-      navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).then(
-        function(keySystemAccess) {
-          createMediaKeys(keySystemAccess);
-        }
-      )
-    }
-  );
-  promise.then(
-    function(keySystemAccess) {
-      createMediaKeys(keySystemAccess);    
-    });
-};
-
-// Function to create media keys from key system access
-async function createMediaKeys(keySystemAccess) {
-  let promise = await keySystemAccess.createMediaKeys();
-  promise.catch(
-    function(error) {
-      console.error("Unable to create MediaKeys: " + error);
-    }
-  );
-  promise.then(
-    function(mediaKeys) {
-      onCreate(mediaKeys);
-    }
-  )
-}
-
-// Function called when media keys are successfully created
-async function onCreate(mediaKeys) {
-
-   // Set the media keys on the video player
-   videoPlayer.setMediaKeys(mediaKeys).catch(error => {
-    console.error('Failed to set media keys:', error);
-  });
-
-  // Creating a media key session
-  let keySession = mediaKeys.createSession(config[0]['sessionTypes'])
-  if (keySession == null) {
-    console.error("Unable to create MediaSession")
-  } else {
-    console.log("MediaSession created with type: " + config[0]['sessionTypes'])
-  }
-  try {
-    // Adding an event listener for the media key session message
-    keySession.addEventListener("message", handleMessage, false);
-  } catch (err) {
-    console.error("Unable to add 'message' event listener to the keySession object. Error: " + err.message);
-  }
-  // Generating the license request
-  keySession.generateRequest(initDataType, initData).catch(error => {
-    console.error('Failed to generate license request:', error);
-  });
-
-    
-
- 
-}
-
-function handleEncrypted(event) {
-
-  initDataType=event.initDataType;
-  initData=event.initData;
-  // Initializing the EME system 
-  initEME();
+  const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
+  const createdMediaKeys = await mediaKeysSystemAccess.createMediaKeys();
+  await video.setMediaKeys(createdMediaKeys);
+  const mediaKeys = video.mediaKeys;
+  const keysSession = mediaKeys.createSession();
+  keysSession.addEventListener("message", handleMessage, false);
+  await keysSession.generateRequest(event.initDataType, event.initData);
 
 }
-
 
 // Event handler for the media key session message
 function handleMessage(event) {
@@ -159,36 +92,56 @@ function handleMessage(event) {
   }
 }
 
+async function startPlayback() {
+  const video = document.getElementById('video');
+  const mp4VideoUri = './video.mp4';
+  const mp4AudioUri = './audio.mp4';
+  const mimeCodecVideo = 'video/mp4; codecs="avc1.64001f"';
+  const mimeCodecAudio = 'audio/mp4; codecs="mp4a.40.2"';
+
+  if (!window.MediaSource || !MediaSource.isTypeSupported(mimeCodecVideo) || !MediaSource.isTypeSupported(mimeCodecAudio)) {
+      console.error('Unsupported MIME type or codec: ', mimeCodecVideo, mimeCodecAudio);
+  }
+
+  video.addEventListener('encrypted', handleEmeEncryption, false);
+
+  const mediaSource = new MediaSource();
+  video.src = URL.createObjectURL(mediaSource);
+
+  async function getMp4Data(uri) {
+      const response = await fetch(uri);
+      const arrayBuffer = await response.arrayBuffer();
+      return arrayBuffer;
+  }
+
+  mediaSource.addEventListener('sourceopen', async function (_) {
+      URL.revokeObjectURL(video.src);
+
+      const sourceBufferVideo = mediaSource.addSourceBuffer(mimeCodecVideo);
+      const sourceBufferAudio = mediaSource.addSourceBuffer(mimeCodecAudio);
+
+      sourceBufferVideo.appendBuffer(await getMp4Data(mp4VideoUri));
+      sourceBufferAudio.appendBuffer(await getMp4Data(mp4AudioUri));
+  });
+}
+
 
 
 // Execution when the window is fully loaded
 window.onload = function() {
   
 
+startPlayback();
 
-// The URL of the video you want to play
-let videoUrl = 'https://storage.googleapis.com/wvmedia/cenc/h264/tears.mpd';
-var context = new Dash.di.DashContext();
-var videoPlayer = new MediaPlayer(context);
-videoPlayer.startup();
-videoPlayer.attachView(document.querySelector("#videoPlayer"));
-
-
-// Add the encrypted event listener
-videoPlayer.addEventListener('encrypted',handleEncrypted,false);
-
-//let videoPlayer = document.getElementById('videoPlayer');
-  
-videoPlayer.attachSource(videoUrl);
-
-  // Adding an event listener for click on the video
-  videoPlayer.addEventListener('click', function() {
-    // Playing or pausing the video depending on the current state
-    if (videoPlayer.paused) {   
-      videoPlayer.play(); 
+video.addEventListener('click', async function() {
+    // Lecture ou pause de la vidéo
+    if (video.paused) {
+      video.play();
     } else {
-      videoPlayer.pause();
+      video.pause();
     }
-  });
-};
+  
+});
+
+}
 
