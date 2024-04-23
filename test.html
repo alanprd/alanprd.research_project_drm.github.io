@@ -1,49 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shaka Player Test</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.0/shaka-player.compiled.js"></script>
-</head>
-<body>
-  <video id="videoTest" controls autoplay width="640" height="360"></video>
-  <script>
-    const videoElement = document.getElementById('videoTest');
-    let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy';
-    let isLoaded = false;
-
-    window.onload = function() {
-      const player = new shaka.Player(videoElement);
-
-      player.configure({
-        drm: {
-          servers: {
-            'com.widevine.alpha': licenseServerUrl
-          }
-        }
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaka Player Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.0/shaka-player.compiled.js"></script>
+  </head>
+  <body>
+    <video id="videoTest"controls width="60%" height="40%"></video>
+    <input type="text" id="mpdInput" placeholder="Entrez l'URL MPD">
+    <button id="loadButton">Charger la vidéo</button>
+    <script>
+      const videoPlayer = document.getElementById('videoTest');
+      const loadButton = document.getElementById('loadButton');
+      const mpdInput = document.getElementById('mpdInput');
+      let licenseServerUrl = 'https://proxy.staging.widevine.com/proxy';
+      const player = new shaka.Player(videoPlayer);
+      videoPlayer.addEventListener('click', function() {
+	      // Playing or pausing the video depending on the current state
+	      if (videoPlayer.paused) {   
+	      	videoPlayer.play(); 
+	      } else {
+	      	videoPlayer.pause();
+	      }
       });
+      loadButton.addEventListener('click', async function() {
+	  const mpdUrl = mpdInput.value.trim();
 
-      // Charger la vidéo lorsqu'on clique sur la vidéo
-      videoElement.addEventListener('click', async function() {
-        if (!isLoaded) {
-          try {
-            await player.load("./output.mpd");
-            console.log('La MPD a été chargée avec succès.');
-            isLoaded = true;
-          } catch (error) {
-            console.error('Erreur lors du chargement de la MPD :', error);
-          }
-        } else {
-          // Lecture ou pause de la vidéo
-          if (videoElement.paused) {
-            videoElement.play();
-          } else {
-            videoElement.pause();
-          }
-        }
-      });
-    };
+	  if (!mpdUrl) {
+	    console.error('Veuillez entrer une URL MPD valide.');
+	    return;
+	  }
+
+	  
+	  try {
+	  	player.configure({
+			drm: {
+			  servers: {
+			    'com.widevine.alpha': licenseServerUrl
+			  }
+			}
+		});
+
+	      await player.load(mpdUrl);
+		    videoPlayer.play(); 
+	      console.log('La MPD a été chargée avec succès.');
+
+	    } catch (error) {
+	      console.error('Erreur lors du chargement de la MPD :', error);
+	    }
+  
+});
+
+
   </script>
 </body>
 </html>
