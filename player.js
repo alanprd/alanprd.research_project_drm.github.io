@@ -60,7 +60,7 @@ function hexdump(buffer, blockSize) {//This function creates a hexadecimal dump 
 // Configuration of the key system
 let config = [{
   initDataTypes: ['cenc'],
-  //sessionTypes: ['persistent-license'],
+  sessionTypes: ['persistent-license'],
   videoCapabilities: [{
     contentType: 'video/mp4; codecs="avc1.64001f"'
   }],
