@@ -72,14 +72,35 @@ let config = [{
 async function handleEmeEncryption(event){
 
   const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
-  const createdMediaKeys = await mediaKeysSystemAccess.createMediaKeys();
-  await video.setMediaKeys(createdMediaKeys);
-  const mediaKeys = video.mediaKeys;
-  const keysSession = mediaKeys.createSession();
-  keysSession.addEventListener("message", handleMessage, false);
-  await keysSession.generateRequest(event.initDataType, event.initData);
+
+  let promise = await navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
+    function(error) { //modifies the configuration and tries to request access to the Key System again.
+      console.error("Error while initializing media key system: " + error);
+      config[0]['sessionTypes'] = ['temporary']
+      navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).then(
+        async function(mediaKeys) {
+          const createdMediaKeys = await mediaKeys.createMediaKeys();
+          await video.setMediaKeys(createdMediaKeys);
+          const mediaKeys = video.mediaKeys;
+          const keysSession = mediaKeys.createSession();
+          keysSession.addEventListener("message", handleMessage, false);
+          await keysSession.generateRequest(event.initDataType, event.initData);
+        }
+      )
+    }
+  );
+  promise.then(
+    async function(mediaKeys) {
+      const createdMediaKeys = await mediaKeys.createMediaKeys();
+          await video.setMediaKeys(createdMediaKeys);
+          const mediaKeys = video.mediaKeys;
+          const keysSession = mediaKeys.createSession();
+          keysSession.addEventListener("message", handleMessage, false);
+          await keysSession.generateRequest(event.initDataType, event.initData);   
+    });
 
 }
+
 
 // Event handler for the media key session message
 function handleMessage(event) {
