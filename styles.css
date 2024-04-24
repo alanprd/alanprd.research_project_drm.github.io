@@ -1,19 +1,29 @@
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6; /* Improves readability */
+    color: #333; /* Dark grey color for text */
+    background-color: #f4f4f4; /* Light grey background */
+    padding: 20px; /* Adds a little space around your content */
 }
 
 #videoPlayer {
     width: 60%; 
     margin: 20px auto; 
     display: block;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
 h1 {
     text-align: center;
     margin-top: 50px;
+    color: #666; /* Darker text color for headings */
 }
 
 footer {
     text-align: center;
     padding: 20px 0;
+    background-color: #333; /* Dark background for contrast */
+    color: #fff; /* White text for readability on dark background */
+    font-size: 0.9em; /* Slightly smaller text */
 }
