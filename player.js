@@ -71,9 +71,9 @@ let config = [{
 
 async function handleEmeEncryption(event){
 
-  const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
+  //const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
 
-  let promise = await navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
+  let promise =  navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
     function(error) { //modifies the configuration and tries to request access to the Key System again.
       console.error("Error while initializing media key system: " + error);
       config[0]['sessionTypes'] = ['temporary']
