@@ -69,10 +69,10 @@ let config = [{
   }],
 }];
 
-function Session(initDataType, initData,mediaKeysSystemAccess){
-  const createdMediaKeys =  mediaKeysSystemAccess.createMediaKeys();
-   video.setMediaKeys(createdMediaKeys);
-  const mediaKeys = video.mediaKeys;
+function Session(initDataType, initData,mediaKeys){
+  const createdMediaKeys =  mediaKeys.createMediaKeys();
+   //video.setMediaKeys(createdMediaKeys);
+  //const mediaKeys = video.mediaKeys;
   const keysSession = mediaKeys.createSession(config[0]['sessionTypes']);
   if (keysSession == null) {
     console.error("Unable to create MediaSession")
@@ -90,6 +90,20 @@ function Session(initDataType, initData,mediaKeysSystemAccess){
    keysSession.generateRequest(initDataType, initData);
 
 }
+
+function createMediaKeys(initDataType, initData,keySystemAccess) {
+  let promise = keySystemAccess.createMediaKeys();
+  promise.catch(
+    function(error) {
+      console.error("Unable to create MediaKeys : " + error);
+    }
+  );
+  promise.then(
+    function(mediaKeys) {
+      Session(initDataType,initData,mediaKeys);    }
+  )
+}
+
  function handleEmeEncryption(event){
 
  // const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
@@ -99,16 +113,16 @@ function Session(initDataType, initData,mediaKeysSystemAccess){
       console.error("Error while initializing media key system: " + error);
       config[0]['sessionTypes'] = ['temporary']
       navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).then(
-         function(mediaKeysSystemAccess) {
-          Session(event.initDataType, event.initData,mediaKeysSystemAccess);
+         function(keySystemAccess) {
+          createMediaKeys(event.initDataType, event.initData,keySystemAccess);
        
         }
       )
     }
   );
   promise.then(
-     function(mediaKeysSystemAccess) {
-      Session(event.initDataType, event.initData,mediaKeysSystemAccess);  
+     function(keySystemAccess) {
+      createMediaKeys(event.initDataType, event.initData,keySystemAccess);  
     });
 
 }
