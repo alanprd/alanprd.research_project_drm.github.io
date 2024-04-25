@@ -22,38 +22,7 @@ function base64ToUint8Array(base64) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes;
-}
-
-function hexdump(buffer, blockSize) {//This function creates a hexadecimal dump of a buffer. 
-  if (buffer instanceof ArrayBuffer && buffer.byteLength !== undefined) {
-    buffer = String.fromCharCode.apply(String, [].slice.call(new Uint8Array(buffer)));
-  } else if (Array.isArray(buffer)) {
-    buffer = String.fromCharCode.apply(String, buffer);
-  } else if (buffer.constructor === Uint8Array) {
-    buffer = String.fromCharCode.apply(String, [].slice.call(buffer));
-  } else {
-    console.warn("Error: buffer is unknown...");
-    return false;
-  }
-
-  blockSize = blockSize || 16;
-  let lines = [];
-  let hex = "0123456789ABCDEF";
-  for (let b = 0; b < buffer.length; b += blockSize) {
-    let block = buffer.slice(b, Math.min(b + blockSize, buffer.length));
-    let addr = ("0000" + b.toString(16)).slice(-4);
-    let codes = block.split('').map(function(ch) {
-      let code = ch.charCodeAt(0);
-      return " " + hex[(0xF0 & code) >> 4] + hex[0x0F & code];
-    }).join("");
-    codes += "   ".repeat(blockSize - block.length);
-    let chars = block.replace(/[\x00-\x1F\x20]/g, '.');
-    chars += " ".repeat(blockSize - block.length);
-    lines.push(addr + " " + codes + "  " + chars);
-  }
-  return lines.join("\n");
-}
-
+};
 
 
 
@@ -71,9 +40,9 @@ let config = [{
 
 async function handleEmeEncryption(event){
 
-  //const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
+ // const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
 
-  let promise =  navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
+  let promise = await navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
     function(error) { //modifies the configuration and tries to request access to the Key System again.
       console.error("Error while initializing media key system: " + error);
       config[0]['sessionTypes'] = ['temporary']
@@ -99,8 +68,7 @@ async function handleEmeEncryption(event){
           await keysSession.generateRequest(event.initDataType, event.initData);   
     });
 
-}
-
+};
 
 // Event handler for the media key session message
 function handleMessage(event) {
