@@ -70,7 +70,6 @@ let config = [{
 }];
 
 function Session(initDataType, initData,mediaKeys){
-  const createdMediaKeys =  mediaKeys.createMediaKeys();
    //video.setMediaKeys(createdMediaKeys);
   //const mediaKeys = video.mediaKeys;
   const keysSession = mediaKeys.createSession(config[0]['sessionTypes']);
