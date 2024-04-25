@@ -63,10 +63,7 @@ let config = [{
   sessionTypes: ['persistent-license'],
   videoCapabilities: [{
     contentType: 'video/mp4; codecs="avc1.64001f"'
-  }],
-  audioCapabilities: [{
-    contentType: 'audio/mp4; codecs="mp4a.40.2"'
-  }],
+  }]
 }];
 
 function Session(initDataType, initData,mediaKeys){
@@ -171,12 +168,10 @@ function handleMessage(event) {
 async function startPlayback() {
   const video = document.getElementById('video');
   const mp4VideoUri = './video.mp4';
-  const mp4AudioUri = './audio.mp4';
   const mimeCodecVideo = 'video/mp4; codecs="avc1.64001f"';
-  const mimeCodecAudio = 'audio/mp4; codecs="mp4a.40.2"';
 
-  if (!window.MediaSource || !MediaSource.isTypeSupported(mimeCodecVideo) || !MediaSource.isTypeSupported(mimeCodecAudio)) {
-      console.error('Unsupported MIME type or codec: ', mimeCodecVideo, mimeCodecAudio);
+  if (!window.MediaSource || !MediaSource.isTypeSupported(mimeCodecVideo)) {
+      console.error('Unsupported MIME type or codec: ', mimeCodecVideo);
   }
 
   video.addEventListener('encrypted', handleEmeEncryption, false);
@@ -194,10 +189,8 @@ async function startPlayback() {
       URL.revokeObjectURL(video.src);
 
       const sourceBufferVideo = mediaSource.addSourceBuffer(mimeCodecVideo);
-      const sourceBufferAudio = mediaSource.addSourceBuffer(mimeCodecAudio);
 
       sourceBufferVideo.appendBuffer(await getMp4Data(mp4VideoUri));
-      sourceBufferAudio.appendBuffer(await getMp4Data(mp4AudioUri));
   });
 }
 
