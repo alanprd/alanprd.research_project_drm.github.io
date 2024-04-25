@@ -170,8 +170,8 @@ function handleMessage(event) {
 
 async function startPlayback() {
   const video = document.getElementById('video');
-  const mp4VideoUri = 'https://alanprd.github.io/research_project_drm.github.io/video.mp4';
-  const mp4AudioUri = 'https://alanprd.github.io/research_project_drm.github.io/audio.mp4';
+  const mp4VideoUri = './video.mp4';
+  const mp4AudioUri = './audio.mp4';
   const mimeCodecVideo = 'video/mp4; codecs="avc1.64001f"';
   const mimeCodecAudio = 'audio/mp4; codecs="mp4a.40.2"';
 
