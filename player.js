@@ -22,7 +22,38 @@ function base64ToUint8Array(base64) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes;
-};
+}
+
+
+function hexdump(buffer, blockSize) {//This function creates a hexadecimal dump of a buffer. 
+  if (buffer instanceof ArrayBuffer && buffer.byteLength !== undefined) {
+    buffer = String.fromCharCode.apply(String, [].slice.call(new Uint8Array(buffer)));
+  } else if (Array.isArray(buffer)) {
+    buffer = String.fromCharCode.apply(String, buffer);
+  } else if (buffer.constructor === Uint8Array) {
+    buffer = String.fromCharCode.apply(String, [].slice.call(buffer));
+  } else {
+    console.warn("Error: buffer is unknown...");
+    return false;
+  }
+
+  blockSize = blockSize || 16;
+  let lines = [];
+  let hex = "0123456789ABCDEF";
+  for (let b = 0; b < buffer.length; b += blockSize) {
+    let block = buffer.slice(b, Math.min(b + blockSize, buffer.length));
+    let addr = ("0000" + b.toString(16)).slice(-4);
+    let codes = block.split('').map(function(ch) {
+      let code = ch.charCodeAt(0);
+      return " " + hex[(0xF0 & code) >> 4] + hex[0x0F & code];
+    }).join("");
+    codes += "   ".repeat(blockSize - block.length);
+    let chars = block.replace(/[\x00-\x1F\x20]/g, '.');
+    chars += " ".repeat(blockSize - block.length);
+    lines.push(addr + " " + codes + "  " + chars);
+  }
+  return lines.join("\n");
+}
 
 
 
@@ -38,37 +69,49 @@ let config = [{
   }],
 }];
 
-async function handleEmeEncryption(event){
+function Session(initDataType, initData,mediaKeysSystemAccess){
+  const createdMediaKeys =  mediaKeysSystemAccess.createMediaKeys();
+   video.setMediaKeys(createdMediaKeys);
+  const mediaKeys = video.mediaKeys;
+  const keysSession = mediaKeys.createSession(config[0]['sessionTypes']);
+  if (keysSession == null) {
+    console.error("Unable to create MediaSession")
+  } else {
+    console.log("MediaSession created with type: " + config[0]['sessionTypes'])
+  }
+
+  try {
+    keysSession.addEventListener("message", handleMessage, false);
+  } catch (err) {
+    console.error("Unable to add 'message' " +
+      "event listener to the keySession object. Error: " + err.message);
+  }
+
+   keysSession.generateRequest(initDataType, initData);
+
+}
+ function handleEmeEncryption(event){
 
  // const mediaKeysSystemAccess = await navigator.requestMediaKeySystemAccess("com.widevine.alpha", config);
 
-  let promise = await navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
+  let promise =  navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).catch(
     function(error) { //modifies the configuration and tries to request access to the Key System again.
       console.error("Error while initializing media key system: " + error);
       config[0]['sessionTypes'] = ['temporary']
       navigator.requestMediaKeySystemAccess('com.widevine.alpha', config).then(
-        async function(mediaKeysSystemAccess) {
-          const createdMediaKeys = await mediaKeysSystemAccess.createMediaKeys();
-          await video.setMediaKeys(createdMediaKeys);
-          const mediaKeys = video.mediaKeys;
-          const keysSession = mediaKeys.createSession();
-          keysSession.addEventListener("message", handleMessage, false);
-          await keysSession.generateRequest(event.initDataType, event.initData);
+         function(mediaKeysSystemAccess) {
+          Session(event.initDataType, event.initData,mediaKeysSystemAccess);
+       
         }
       )
     }
   );
   promise.then(
-    async function(mediaKeysSystemAccess) {
-      const createdMediaKeys = await mediaKeysSystemAccess.createMediaKeys();
-          await video.setMediaKeys(createdMediaKeys);
-          const mediaKeys = video.mediaKeys;
-          const keysSession = mediaKeys.createSession();
-          keysSession.addEventListener("message", handleMessage, false);
-          await keysSession.generateRequest(event.initDataType, event.initData);   
+     function(mediaKeysSystemAccess) {
+      Session(event.initDataType, event.initData,mediaKeysSystemAccess);  
     });
 
-};
+}
 
 // Event handler for the media key session message
 function handleMessage(event) {
