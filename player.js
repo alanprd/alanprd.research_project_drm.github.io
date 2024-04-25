@@ -71,7 +71,7 @@ let config = [{
 
 function Session(initDataType, initData,mediaKeys){
    video.setMediaKeys(createdMediaKeys);
-   const mediaKeys = video.mediaKeys;
+   //const mediaKeys = video.mediaKeys;
   const keysSession = mediaKeys.createSession(config[0]['sessionTypes']);
   if (keysSession == null) {
     console.error("Unable to create MediaSession")
