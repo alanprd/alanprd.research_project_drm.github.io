@@ -167,7 +167,7 @@ function handleMessage(event) {
 
 async function startPlayback() {
   const video = document.getElementById('video');
-  const mp4VideoUri = './vision.mp4';
+  const mp4VideoUri = './vision0.mp4';
   const mimeCodecVideo = 'video/mp4; codecs="avc1.64001f"';
 
   if (!window.MediaSource || !MediaSource.isTypeSupported(mimeCodecVideo)) {
