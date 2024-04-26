@@ -15,6 +15,34 @@ body {
     height: auto;
 }
 
+#videoTest {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: auto;
+}
+
+input[type="text"] {
+    display: block;
+    width: 80%;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 18px;
+}
+
+button {
+    display: block;
+    width: 200px;
+    height: 50px;
+    margin: 20px auto;
+    background-color: #3498db;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+}
+
 #videoPlayer {
     display: block;
     margin-left: auto;
