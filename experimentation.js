@@ -177,7 +177,7 @@ function handleMessage(event) {
    if (event.messageType === 'persistent-license') {
     try {
       // Call remove() to remove the license
-       let re = await keySession.remove();
+       let re = keySession.remove();
       console.log("License removed successfully.");
 
       // Generate a new request or obtain updated license data
