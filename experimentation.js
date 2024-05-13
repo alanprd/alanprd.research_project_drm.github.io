@@ -184,7 +184,6 @@ function handleMessage(event) {
       // (assuming there's a mechanism in your code to obtain the new license data)
 
       // Call update() with the new license data
-      let re = /* new license data obtained */;
       let promise = keySession.update(re).catch(
         function(error) {
           console.error("Error updating session after removing license: " + error);
