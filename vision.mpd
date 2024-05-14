@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Generated with https://github.com/shaka-project/shaka-packager version v3.0.4-ceeb378-release-->
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" xmlns:cenc="urn:mpeg:cenc:2013" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" minBufferTime="PT2S" type="static" mediaPresentationDuration="PT74.433334S">
+  <Period id="0">
+    <AdaptationSet id="0" contentType="video" width="854" height="480" frameRate="30000/1000" subsegmentAlignment="true" par="16:9">
+      <ContentProtection value="cenc" schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="0b6b1623-0421-523c-852b-6a65c9f28de5"/>
+      <ContentProtection schemeIdUri="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed">
+        <cenc:pssh>AAAASHBzc2gAAAAA7e+LqXnWSs6jyCfc1R0h7QAAACgiILOA5yMsiTAR8Yrtq4VUEnqeuerO0FHPrqzhi/kuIqwaSOPclZsG</cenc:pssh>
+      </ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:1077efec-c0b2-4d02-ace3-3c1e52e2fb4b">
+        <cenc:pssh>AAAAdHBzc2gBAAAAEHfv7MCyTQKs4zweUuL7SwAAAAULaxYjBCFSPIUramXJ8o3lVXzDm3i8WNuG3+ZLhe/3Wu46ZFBlzlB4mQI5RqiqWeT8j4CPaxBWLbSxs50P+NqzXe1qlWtrVtWiQsDOk69r8AAAAAA=</cenc:pssh>
+      </ContentProtection>
+      <Representation id="0" bandwidth="1766087" codecs="avc1.4d4020" mimeType="video/mp4" sar="1:1">
+        <BaseURL>vision0.mp4</BaseURL>
+        <SegmentBase indexRange="1233-1420" timescale="30000">
+          <Initialization range="0-1232"/>
+        </SegmentBase>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="1" contentType="audio" subsegmentStartsWithSAP="1" subsegmentAlignment="true">
+      <Representation id="1" bandwidth="200337" codecs="mp4a.40.2" mimeType="audio/mp4" audioSamplingRate="48000">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+        <BaseURL>audio.mp4</BaseURL>
+        <SegmentBase indexRange="768-955" timescale="48000">
+          <Initialization range="0-767"/>
+        </SegmentBase>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>
