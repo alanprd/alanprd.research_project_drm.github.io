@@ -162,6 +162,7 @@ function handleMessage(event) {
     xhr.responseType = "arraybuffer";
     xhr.setRequestHeader('Content-Type', 'application/octet-stream');
     xhr.send(event.message);
+    
   }
 }
 
